@@ -75,6 +75,11 @@ export default function LoginPage() {
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
+          <div className="mt-4 text-sm text-gray-600">
+            <p>Demo credentials:</p>
+            <p>Email: admin@sprintsync.com</p>
+            <p>Password: admin123</p>
+          </div>
         </CardContent>
       </Card>
     </div>

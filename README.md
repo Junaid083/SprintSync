@@ -1,3 +1,9 @@
+Live Demo: [Link](https://sprint-sync-mauve.vercel.app/)
+
+[Project Overview](https://www.loom.com/share/87acac3fb75d4ccfbe33b96f474f0b3b) , 
+[Code Overview](https://www.loom.com/share/78b31a62945e4b30b71f64ec0ce4e12c)
+
+
 # SprintSync
 
 SprintSync is an internal tool for engineers to log work, track time, and get AI assistance for planning. Built with Next.js 15, MongoDB, and modern web technologies.

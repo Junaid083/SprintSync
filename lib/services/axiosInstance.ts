@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NODE_ENV === "production" ? "" : "http://localhost:3000",
@@ -6,33 +6,50 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-})
+});
 
-// Request interceptor to add auth token
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Token is handled via HttpOnly cookies, so no need to add it manually
-    return config
+    return config;
   },
   (error) => {
-    return Promise.reject(error)
-  },
-)
+    return Promise.reject(error);
+  }
+);
 
-// Response interceptor for error handling
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response
+    return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
-      // Redirect to login on unauthorized
-      if (typeof window !== "undefined") {
-        window.location.href = "/auth/login"
-      }
-    }
-    return Promise.reject(error)
-  },
-)
+    let errorMessage = "An unexpected error occurred. Please try again.";
 
-export default axiosInstance
+    if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error.response?.status === 401) {
+      errorMessage = "Your session has expired. Please log in again.";
+      if (typeof window !== "undefined") {
+        window.location.href = "/auth/login";
+      }
+    } else if (error.response?.status === 403) {
+      errorMessage = "You don't have permission to perform this action.";
+    } else if (error.response?.status === 404) {
+      errorMessage = "The requested resource was not found.";
+    } else if (error.response?.status >= 500) {
+      errorMessage = "Server error. Please try again later.";
+    } else if (
+      error.code === "NETWORK_ERROR" ||
+      error.code === "ECONNABORTED"
+    ) {
+      errorMessage =
+        "Network error. Please check your connection and try again.";
+    }
+
+    const userFriendlyError = new Error(errorMessage);
+    userFriendlyError.name = "UserFriendlyError";
+
+    return Promise.reject(userFriendlyError);
+  }
+);
+
+export default axiosInstance;

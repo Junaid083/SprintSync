@@ -12,4 +12,14 @@ export const authService = {
     });
     return response.data;
   },
+
+  async logout(): Promise<ApiResponse> {
+    const response = await axiosInstance.post("/api/auth/logout");
+    return response.data;
+  },
+
+  async me(): Promise<User> {
+    const response = await axiosInstance.get("/api/auth/me");
+    return response.data.data;
+  },
 };

@@ -73,5 +73,10 @@ UserSchema.pre("save", async function (next) {
   }
 });
 
+// Add query helpers for common operations
+UserSchema.query.active = function () {
+  return this.where({ isActive: true, isDeleted: false });
+};
+
 export default mongoose.models.User ||
   mongoose.model<IUser>("User", UserSchema);

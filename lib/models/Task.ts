@@ -65,5 +65,31 @@ const TaskSchema = new Schema<ITask>(
   }
 );
 
+TaskSchema.index({ userId: 1, createdAt: -1 });
+TaskSchema.index({ userId: 1, status: 1 });
+TaskSchema.index({ userId: 1, dueDate: 1 });
+TaskSchema.index({ userId: 1, priority: 1 });
+TaskSchema.index({ userId: 1, isDeleted: 1, status: 1 });
+
+TaskSchema.query.active = function () {
+  return this.where({ isDeleted: false });
+};
+
+TaskSchema.query.byStatus = function (status: string) {
+  return this.where({ status, isDeleted: false });
+};
+
+TaskSchema.query.byPriority = function (priority: string) {
+  return this.where({ priority, isDeleted: false });
+};
+
+TaskSchema.query.overdue = function () {
+  return this.where({
+    dueDate: { $lt: new Date() },
+    status: { $ne: "done" },
+    isDeleted: false,
+  });
+};
+
 export default mongoose.models.Task ||
   mongoose.model<ITask>("Task", TaskSchema);
